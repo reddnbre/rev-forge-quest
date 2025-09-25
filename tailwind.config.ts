@@ -47,6 +47,16 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        empire: {
+          primary: "hsl(var(--empire-primary))",
+          "primary-light": "hsl(var(--empire-primary-light))",
+          secondary: "hsl(var(--empire-secondary))",
+          accent: "hsl(var(--empire-accent))",
+          dark: "hsl(var(--empire-dark))",
+        },
+        success: "hsl(var(--success))",
+        warning: "hsl(var(--warning))",
+        info: "hsl(var(--info))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -62,6 +72,15 @@ export default {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      backgroundImage: {
+        "gradient-empire": "var(--gradient-empire)",
+        "gradient-hero": "var(--gradient-hero)", 
+        "gradient-card": "var(--gradient-card)",
+      },
+      boxShadow: {
+        "empire": "var(--shadow-empire)",
+        "glow": "var(--shadow-glow)",
       },
       keyframes: {
         "accordion-down": {
@@ -80,10 +99,20 @@ export default {
             height: "0",
           },
         },
+        pulse: {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.5" },
+        },
+        slideIn: {
+          from: { transform: "translateY(10px)", opacity: "0" },
+          to: { transform: "translateY(0)", opacity: "1" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        pulse: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        slideIn: "slideIn 0.5s ease-out",
       },
     },
   },
