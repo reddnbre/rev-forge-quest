@@ -8,42 +8,68 @@ import { useToast } from "@/hooks/use-toast";
 const mockPolls = [
   {
     id: 1,
-    question: "What is the main benefit of compound interest in investing?",
-    type: "Financial Literacy",
+    question: "What is RevEmpire's maximum withdrawal limit percentage?",
+    type: "RevEmpire Knowledge",
     options: [
-      { text: "Earning interest on both principal and accumulated interest", votes: 89, correct: true },
-      { text: "Getting a fixed return every month", votes: 23, correct: false },
-      { text: "Avoiding all investment risks", votes: 12, correct: false },
-      { text: "Immediate high returns", votes: 8, correct: false }
+      { text: "150% of deposits", votes: 45, correct: true },
+      { text: "100% of deposits", votes: 23, correct: false },
+      { text: "200% of deposits", votes: 12, correct: false },
+      { text: "Unlimited", votes: 8, correct: false }
     ],
-    totalVotes: 132,
+    totalVotes: 88,
     timeLeft: "2 days"
   },
   {
     id: 2,
-    question: "In the RevEmpire ecosystem, what generates passive income?",
+    question: "How many referral commission levels does RevEmpire offer?",
     type: "RevEmpire Knowledge",
     options: [
-      { text: "AdShare ownership", votes: 67, correct: true },
-      { text: "One-time purchases", votes: 15, correct: false },
-      { text: "Social media following", votes: 8, correct: false },
-      { text: "Website visits", votes: 5, correct: false }
+      { text: "3 levels deep", votes: 67, correct: true },
+      { text: "1 level only", votes: 15, correct: false },
+      { text: "5 levels deep", votes: 8, correct: false },
+      { text: "2 levels deep", votes: 5, correct: false }
     ],
     totalVotes: 95,
     timeLeft: "1 day"
   },
   {
     id: 3,
-    question: "What's the best strategy for long-term wealth building?",
-    type: "Financial Literacy",
+    question: "What is RevEmpire's main business model?",
+    type: "RevEmpire Knowledge",
     options: [
-      { text: "Diversification and consistent investing", votes: 78, correct: true },
-      { text: "All-in on one investment", votes: 34, correct: false },
-      { text: "Day trading only", votes: 12, correct: false },
-      { text: "Keeping all money in savings", votes: 19, correct: false }
+      { text: "Traffic exchange with cashback advertising", votes: 78, correct: true },
+      { text: "Simple affiliate marketing", votes: 34, correct: false },
+      { text: "Social media platform", votes: 12, correct: false },
+      { text: "E-commerce marketplace", votes: 19, correct: false }
     ],
     totalVotes: 143,
     timeLeft: "5 hours"
+  },
+  {
+    id: 4,
+    question: "What prevents liquidity drainage in RevEmpire?",
+    type: "RevEmpire Knowledge",
+    options: [
+      { text: "Maximum withdrawal limits and repurchase balance", votes: 56, correct: true },
+      { text: "High signup fees", votes: 18, correct: false },
+      { text: "Limited user access", votes: 9, correct: false },
+      { text: "Manual approval process", votes: 7, correct: false }
+    ],
+    totalVotes: 90,
+    timeLeft: "3 days"
+  },
+  {
+    id: 5,
+    question: "What does compound interest teach us about wealth building?",
+    type: "Financial Literacy",
+    options: [
+      { text: "Time and consistency multiply returns exponentially", votes: 89, correct: true },
+      { text: "Only large investments matter", votes: 23, correct: false },
+      { text: "Quick gains are always better", votes: 12, correct: false },
+      { text: "Savings accounts are the best option", votes: 8, correct: false }
+    ],
+    totalVotes: 132,
+    timeLeft: "6 hours"
   }
 ];
 

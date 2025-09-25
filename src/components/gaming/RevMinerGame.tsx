@@ -62,6 +62,7 @@ const RevMinerGame = () => {
   
   const [activityFeed, setActivityFeed] = useState<string[]>([]);
   const [unlockedAchievements, setUnlockedAchievements] = useState<Set<string>>(new Set());
+  const [lastFeedUpdate, setLastFeedUpdate] = useState(Date.now());
   const { toast } = useToast();
 
   // Calculate total earnings per second
@@ -115,7 +116,7 @@ const RevMinerGame = () => {
     return () => clearInterval(interval);
   }, [saveGameState]);
 
-  // Game tick - earn money every second
+  // Game tick - earn money every second but update feed every 5 minutes
   useEffect(() => {
     const interval = setInterval(() => {
       const earnings = calculateEarningsPerSecond();
@@ -125,15 +126,21 @@ const RevMinerGame = () => {
           balance: prev.balance + earnings.total
         }));
         
-        setActivityFeed(prev => [
-          `💰 +$${earnings.total.toFixed(2)} earned ($${earnings.adShareEarnings.toFixed(2)} AdShares, $${earnings.referralEarnings.toFixed(2)} Referrals)`,
-          ...prev.slice(0, 19) // Keep only last 20 entries
-        ]);
+        // Only update feed every 5 minutes (300 seconds)
+        const now = Date.now();
+        if (now - lastFeedUpdate >= 300000) { // 5 minutes = 300,000ms
+          const fiveMinEarnings = earnings.total * 300; // 5 minutes of earnings
+          setActivityFeed(prev => [
+            `💰 +$${fiveMinEarnings.toFixed(2)} earned in last 5 min ($${(earnings.adShareEarnings * 300).toFixed(2)} AdShares, $${(earnings.referralEarnings * 300).toFixed(2)} Referrals)`,
+            ...prev.slice(0, 19) // Keep only last 20 entries
+          ]);
+          setLastFeedUpdate(now);
+        }
       }
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [calculateEarningsPerSecond]);
+  }, [calculateEarningsPerSecond, lastFeedUpdate]);
 
   // Check for achievements
   useEffect(() => {

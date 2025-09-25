@@ -5,9 +5,11 @@ import AboutSection from "@/components/AboutSection";
 import DAOSection from "@/components/dao/DAOSection";
 import RevMinerGame from "@/components/gaming/RevMinerGame";
 import Footer from "@/components/Footer";
+import { AdminBackoffice } from "@/components/admin/AdminBackoffice";
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState("hero");
+  const [showAdmin, setShowAdmin] = useState(false);
 
   const handleNavigate = (section: string) => {
     setActiveSection(section);
@@ -16,6 +18,19 @@ const Index = () => {
       element.scrollIntoView({ behavior: "smooth" });
     }
   };
+
+  // Admin keyboard shortcut
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.shiftKey && event.ctrlKey && event.key.toLowerCase() === 'a') {
+        event.preventDefault();
+        setShowAdmin(true);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // Smooth scroll observation for navigation highlighting
   useEffect(() => {
@@ -57,6 +72,11 @@ const Index = () => {
       </main>
       
       <Footer />
+      
+      <AdminBackoffice 
+        isVisible={showAdmin} 
+        onClose={() => setShowAdmin(false)} 
+      />
     </div>
   );
 };
