@@ -42,6 +42,10 @@ All colors MUST be HSL.
     --empire-secondary: 237 85% 65%;
     --empire-accent: 225 85% 85%;
     --empire-dark: 243 47% 25%;
+    --empire-bg: 243 47% 8%;
+    --empire-surface: 243 47% 12%;
+    --empire-gold: 45 93% 58%;
+    --empire-muted: 240 10% 65%;
     
     /* Gaming Colors */
     --success: 142 70% 50%;
@@ -114,6 +118,10 @@ All colors MUST be HSL.
     --empire-secondary: 225 85% 75%;
     --empire-accent: 243 47% 25%;
     --empire-dark: 243 47% 15%;
+    --empire-bg: 243 47% 8%;
+    --empire-surface: 243 47% 12%;
+    --empire-gold: 45 93% 70%;
+    --empire-muted: 240 10% 65%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
