@@ -5,7 +5,7 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: mode === 'production' ? '/rev-forge-quest/' : '/',
+  base: '/rev-forge-quest/',
   server: {
     host: "::",
     port: 8080,
