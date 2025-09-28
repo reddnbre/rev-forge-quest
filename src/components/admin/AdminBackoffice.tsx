@@ -28,6 +28,20 @@ export const AdminBackoffice: React.FC<AdminBackofficeProps> = ({ isVisible, onC
   const loadGameStats = () => {
     // Load game statistics from localStorage
     const savedGame = localStorage.getItem('revminer-game') || localStorage.getItem('revminer-save');
+    
+    // Load global referrals tracking
+    const globalReferrals = localStorage.getItem('global-referrals');
+    let totalGlobalReferrals = 0;
+    
+    if (globalReferrals) {
+      try {
+        const referralData = JSON.parse(globalReferrals);
+        totalGlobalReferrals = referralData.total || 0;
+      } catch (error) {
+        console.error('Failed to load global referrals:', error);
+      }
+    }
+    
     if (savedGame) {
       try {
         const gameData = JSON.parse(savedGame);
@@ -36,7 +50,7 @@ export const AdminBackoffice: React.FC<AdminBackofficeProps> = ({ isVisible, onC
           totalPlayers: 1,
           totalBalance: gameData.balance || 0,
           totalAdShares: totalAdShares,
-          totalReferrals: gameData.referrals?.length || 0
+          totalReferrals: totalGlobalReferrals
         });
       } catch (error) {
         console.error('Failed to load game stats:', error);
@@ -47,6 +61,13 @@ export const AdminBackoffice: React.FC<AdminBackofficeProps> = ({ isVisible, onC
           totalReferrals: 0
         });
       }
+    } else {
+      setGameStats({
+        totalPlayers: 0,
+        totalBalance: 0,
+        totalAdShares: 0,
+        totalReferrals: totalGlobalReferrals
+      });
     }
   };
 
@@ -54,9 +75,10 @@ export const AdminBackoffice: React.FC<AdminBackofficeProps> = ({ isVisible, onC
     localStorage.removeItem('revminer-game');
     localStorage.removeItem('revminer-save');
     localStorage.removeItem('revminer-achievements');
+    localStorage.removeItem('global-referrals');
     toast({
       title: "Game Data Cleared",
-      description: "All player progress has been reset",
+      description: "All player progress and global referrals have been reset",
     });
     loadGameStats();
   };

@@ -239,6 +239,32 @@ const RevMinerGame = () => {
         `🎉 Paid Advertisers → Referral Gained! Tier ${result.tier} (+$${result.earnings.toFixed(2)}/sec)`,
         ...prev
       ]);
+      
+      // Update global referrals count
+      const globalReferrals = localStorage.getItem('global-referrals');
+      let referralData = { total: 0, history: [] };
+      
+      if (globalReferrals) {
+        try {
+          referralData = JSON.parse(globalReferrals);
+        } catch (error) {
+          console.error('Failed to parse global referrals:', error);
+        }
+      }
+      
+      referralData.total = (referralData.total || 0) + 1;
+      referralData.history = [
+        ...(referralData.history || []),
+        {
+          id: Date.now(),
+          tier: result.tier,
+          timestamp: Date.now(),
+          earnings: result.earnings,
+          playerId: 'user-' + Date.now() // Simple player ID for tracking
+        }
+      ].slice(-100); // Keep last 100 referrals
+      
+      localStorage.setItem('global-referrals', JSON.stringify(referralData));
     } else {
       setActivityFeed(prev => [
         `💸 Paid Advertisers → No referral this time`,

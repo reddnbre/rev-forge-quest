@@ -164,11 +164,13 @@ const ProposalsTab = () => {
                 )}
                 <Button 
                   size="sm" 
-                  variant="outline"
+                  variant="destructive"
                   onClick={() => deleteProposal(proposal.id)}
-                  className="ml-auto"
+                  className="ml-2"
+                  title="Delete this proposal"
                 >
-                  <Trash2 className="w-4 h-4" />
+                  <Trash2 className="w-4 h-4 mr-1" />
+                  Delete
                 </Button>
               </div>
             </div>
