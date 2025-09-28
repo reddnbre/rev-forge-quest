@@ -22,6 +22,25 @@ const SubmitProposalTab = () => {
       return;
     }
     
+    // Get existing proposals from localStorage
+    const existingProposals = JSON.parse(localStorage.getItem('dao-proposals') || '[]');
+    
+    // Create new proposal
+    const newProposal = {
+      id: Date.now(), // Simple ID generation
+      title,
+      description,
+      author: "You",
+      status: "Active",
+      votesFor: 0,
+      votesAgainst: 0,
+      endDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] // 14 days from now
+    };
+    
+    // Add to proposals and save
+    const updatedProposals = [newProposal, ...existingProposals];
+    localStorage.setItem('dao-proposals', JSON.stringify(updatedProposals));
+    
     toast({
       title: "Proposal Submitted!",
       description: "Your catalyst proposal has been submitted for community review.",

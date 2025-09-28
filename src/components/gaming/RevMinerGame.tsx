@@ -83,24 +83,39 @@ const RevMinerGame = () => {
       lastSaved: Date.now()
     };
     localStorage.setItem('revminer-save', JSON.stringify(saveData));
+    localStorage.setItem('revminer-game', JSON.stringify(saveData)); // Also save to revminer-game for admin compatibility
   }, [gameState]);
 
   // Load game state from localStorage
   useEffect(() => {
-    const saved = localStorage.getItem('revminer-save');
+    const saved = localStorage.getItem('revminer-save') || localStorage.getItem('revminer-game');
     if (saved) {
       try {
         const loadedState = JSON.parse(saved);
         const timeDiff = (Date.now() - loadedState.lastSaved) / 1000; // seconds
-        const earnings = calculateEarningsPerSecond();
-        const offlineEarnings = timeDiff * earnings.total;
+        
+        // Set the loaded state first to calculate earnings properly
+        const tempState = {
+          ...loadedState,
+          lastSaved: Date.now()
+        };
+        
+        // Calculate earnings based on loaded adShares and referrals
+        const adShareEarnings = tempState.adShares?.reduce(
+          (total: number, adShare: any) => total + (adShare.count * adShare.earnings), 0
+        ) || 0;
+        const referralEarnings = tempState.referrals?.reduce(
+          (total: number, referral: any) => total + referral.earnings, 0
+        ) || 0;
+        const totalEarnings = adShareEarnings + referralEarnings;
+        const offlineEarnings = timeDiff * totalEarnings;
         
         if (offlineEarnings > 0) {
           setActivityFeed(prev => [`⏰ Welcome back! You earned $${offlineEarnings.toFixed(2)} while away (${(timeDiff/60).toFixed(1)} minutes)`, ...prev]);
         }
         
         setGameState({
-          ...loadedState,
+          ...tempState,
           balance: loadedState.balance + offlineEarnings,
           lastSaved: Date.now()
         });

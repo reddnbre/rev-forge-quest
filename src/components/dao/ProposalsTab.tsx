@@ -1,7 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ThumbsUp, ThumbsDown, Users } from "lucide-react";
+import { ThumbsUp, ThumbsDown, Users, Trash2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { useState, useEffect } from "react";
 
 const mockProposals = [
   {
@@ -37,9 +39,68 @@ const mockProposals = [
 ];
 
 const ProposalsTab = () => {
+  const [proposals, setProposals] = useState(mockProposals);
+  const [votedProposals, setVotedProposals] = useState<Set<number>>(new Set());
+  const { toast } = useToast();
+
+  // Load proposals from localStorage on mount
+  useEffect(() => {
+    const savedProposals = localStorage.getItem('dao-proposals');
+    if (savedProposals) {
+      try {
+        setProposals(JSON.parse(savedProposals));
+      } catch (error) {
+        console.error('Failed to load proposals:', error);
+      }
+    }
+  }, []);
+
+  // Save proposals to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('dao-proposals', JSON.stringify(proposals));
+  }, [proposals]);
+
+  const handleVote = (proposalId: number, isFor: boolean) => {
+    if (votedProposals.has(proposalId)) {
+      toast({
+        title: "Already Voted",
+        description: "You have already voted on this proposal",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setProposals(prevProposals =>
+      prevProposals.map(proposal =>
+        proposal.id === proposalId
+          ? {
+              ...proposal,
+              votesFor: isFor ? proposal.votesFor + 1 : proposal.votesFor,
+              votesAgainst: !isFor ? proposal.votesAgainst + 1 : proposal.votesAgainst,
+            }
+          : proposal
+      )
+    );
+
+    setVotedProposals(prev => new Set([...prev, proposalId]));
+    
+    toast({
+      title: `Vote ${isFor ? 'For' : 'Against'} Recorded`,
+      description: `Your vote has been counted for proposal "${proposals.find(p => p.id === proposalId)?.title}"`,
+    });
+  };
+
+  const deleteProposal = (proposalId: number) => {
+    setProposals(prev => prev.filter(proposal => proposal.id !== proposalId));
+    toast({
+      title: "Proposal Deleted",
+      description: "The proposal has been successfully deleted",
+    });
+  };
+
   return (
     <div className="space-y-6">
-      {mockProposals.map((proposal) => (
+      {proposals.map((proposal) => (
         <Card key={proposal.id} className="bg-white shadow-empire">
           <CardHeader>
             <div className="flex justify-between items-start">
@@ -78,16 +139,38 @@ const ProposalsTab = () => {
                 </div>
               </div>
               
-              {proposal.status === "Active" && (
-                <div className="space-x-2">
-                  <Button size="sm" className="bg-success hover:bg-success/90">
-                    Vote For
-                  </Button>
-                  <Button size="sm" variant="destructive">
-                    Vote Against
-                  </Button>
-                </div>
-              )}
+              <div className="flex gap-2">
+                {proposal.status === "Active" && (
+                  <>
+                    <Button 
+                      size="sm" 
+                      className="bg-success hover:bg-success/90"
+                      onClick={() => handleVote(proposal.id, true)}
+                      disabled={votedProposals.has(proposal.id)}
+                    >
+                      <ThumbsUp className="w-4 h-4 mr-1" />
+                      Vote For
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      variant="destructive"
+                      onClick={() => handleVote(proposal.id, false)}
+                      disabled={votedProposals.has(proposal.id)}
+                    >
+                      <ThumbsDown className="w-4 h-4 mr-1" />
+                      Vote Against
+                    </Button>
+                  </>
+                )}
+                <Button 
+                  size="sm" 
+                  variant="outline"
+                  onClick={() => deleteProposal(proposal.id)}
+                  className="ml-auto"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>

@@ -27,20 +27,32 @@ export const AdminBackoffice: React.FC<AdminBackofficeProps> = ({ isVisible, onC
 
   const loadGameStats = () => {
     // Load game statistics from localStorage
-    const savedGame = localStorage.getItem('revminer-game');
+    const savedGame = localStorage.getItem('revminer-game') || localStorage.getItem('revminer-save');
     if (savedGame) {
-      const gameData = JSON.parse(savedGame);
-      setGameStats({
-        totalPlayers: 1,
-        totalBalance: gameData.balance || 0,
-        totalAdShares: (gameData.adShares?.tier1 || 0) + (gameData.adShares?.tier2 || 0) + (gameData.adShares?.tier3 || 0),
-        totalReferrals: gameData.referrals?.length || 0
-      });
+      try {
+        const gameData = JSON.parse(savedGame);
+        const totalAdShares = gameData.adShares?.reduce((sum: number, tier: any) => sum + (tier.count || 0), 0) || 0;
+        setGameStats({
+          totalPlayers: 1,
+          totalBalance: gameData.balance || 0,
+          totalAdShares: totalAdShares,
+          totalReferrals: gameData.referrals?.length || 0
+        });
+      } catch (error) {
+        console.error('Failed to load game stats:', error);
+        setGameStats({
+          totalPlayers: 0,
+          totalBalance: 0,
+          totalAdShares: 0,
+          totalReferrals: 0
+        });
+      }
     }
   };
 
   const clearGameData = () => {
     localStorage.removeItem('revminer-game');
+    localStorage.removeItem('revminer-save');
     localStorage.removeItem('revminer-achievements');
     toast({
       title: "Game Data Cleared",
