@@ -29,26 +29,16 @@ export const AdminBackoffice: React.FC<AdminBackofficeProps> = ({ isVisible, onC
     // Load game statistics from localStorage
     const savedGame = localStorage.getItem('revminer-game') || localStorage.getItem('revminer-save');
     
-    // Load global referrals tracking
-    const globalReferrals = localStorage.getItem('global-referrals');
+    // Load global referrals tracking - count actual referrals from game save
     let totalGlobalReferrals = 0;
-    
-    if (globalReferrals) {
-      try {
-        const referralData = JSON.parse(globalReferrals);
-        totalGlobalReferrals = referralData.total || 0;
-        console.log('Loading global referrals:', totalGlobalReferrals);
-      } catch (error) {
-        console.error('Failed to load global referrals:', error);
-      }
-    } else {
-      console.log('No global referrals found in localStorage');
-    }
     
     if (savedGame) {
       try {
         const gameData = JSON.parse(savedGame);
         const totalAdShares = gameData.adShares?.reduce((sum: number, tier: any) => sum + (tier.count || 0), 0) || 0;
+        // Count referrals directly from game data
+        totalGlobalReferrals = gameData.referrals?.length || 0;
+        
         setGameStats({
           totalPlayers: 1,
           totalBalance: gameData.balance || 0,
@@ -69,7 +59,7 @@ export const AdminBackoffice: React.FC<AdminBackofficeProps> = ({ isVisible, onC
         totalPlayers: 0,
         totalBalance: 0,
         totalAdShares: 0,
-        totalReferrals: totalGlobalReferrals
+        totalReferrals: 0
       });
     }
   };
@@ -157,9 +147,7 @@ export const AdminBackoffice: React.FC<AdminBackofficeProps> = ({ isVisible, onC
             
             <Card className="bg-empire-surface border-empire-accent/20">
               <CardContent className="p-4 text-center">
-                <Badge variant="outline" className="text-lg px-3 py-1">
-                  {gameStats.totalReferrals}
-                </Badge>
+                <div className="text-2xl font-bold text-empire-gold">{gameStats.totalReferrals}</div>
                 <div className="text-sm text-empire-muted mt-2">Total Referrals</div>
               </CardContent>
             </Card>

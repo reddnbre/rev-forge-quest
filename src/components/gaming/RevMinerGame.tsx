@@ -320,21 +320,22 @@ const RevMinerGame = () => {
                 ))}
               </div>
 
-              {gameState.referrals.length > 0 && (
-                <div className="space-y-2">
-                  <h4 className="font-semibold text-empire-primary">
-                    Referrals ({gameState.referrals.length})
-                  </h4>
-                  <ScrollArea className="h-20">
-                    {gameState.referrals.map((referral, index) => (
-                      <div key={referral.id} className="text-sm flex justify-between">
-                        <span>Referral #{index + 1}: Tier {referral.tier}</span>
-                        <span>(+${referral.earnings.toFixed(2)}/sec)</span>
+              <div className="space-y-2">
+                <h4 className="font-semibold text-empire-primary">
+                  Referrals ({gameState.referrals.length})
+                </h4>
+                <div className="space-y-1">
+                  {[1, 2, 3].map(tier => {
+                    const tierReferrals = gameState.referrals.filter(r => r.tier === tier);
+                    return (
+                      <div key={tier} className="flex justify-between text-sm">
+                        <span>Tier {tier}:</span>
+                        <span className="font-medium">{tierReferrals.length}</span>
                       </div>
-                    ))}
-                  </ScrollArea>
+                    );
+                  })}
                 </div>
-              )}
+              </div>
             </CardContent>
           </Card>
 
