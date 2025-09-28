@@ -41,7 +41,14 @@ const mockProposals = [
 const ProposalsTab = () => {
   const [proposals, setProposals] = useState(mockProposals);
   const [votedProposals, setVotedProposals] = useState<Set<number>>(new Set());
+  const [isAdmin, setIsAdmin] = useState(false);
   const { toast } = useToast();
+
+  // Check for admin access (simple implementation using localStorage)
+  useEffect(() => {
+    const adminAccess = localStorage.getItem('admin-access');
+    setIsAdmin(adminAccess === 'true');
+  }, []);
 
   // Load proposals from localStorage on mount
   useEffect(() => {
@@ -91,6 +98,15 @@ const ProposalsTab = () => {
   };
 
   const deleteProposal = (proposalId: number) => {
+    if (!isAdmin) {
+      toast({
+        title: "Access Denied",
+        description: "Only administrators can delete proposals",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setProposals(prev => prev.filter(proposal => proposal.id !== proposalId));
     toast({
       title: "Proposal Deleted",
@@ -162,16 +178,18 @@ const ProposalsTab = () => {
                     </Button>
                   </>
                 )}
-                <Button 
-                  size="sm" 
-                  variant="destructive"
-                  onClick={() => deleteProposal(proposal.id)}
-                  className="ml-2"
-                  title="Delete this proposal"
-                >
-                  <Trash2 className="w-4 h-4 mr-1" />
-                  Delete
-                </Button>
+                {isAdmin && (
+                  <Button 
+                    size="sm" 
+                    variant="destructive"
+                    onClick={() => deleteProposal(proposal.id)}
+                    className="ml-2"
+                    title="Delete this proposal (Admin only)"
+                  >
+                    <Trash2 className="w-4 h-4 mr-1" />
+                    Delete
+                  </Button>
+                )}
               </div>
             </div>
           </CardContent>

@@ -100,6 +100,13 @@ export const AdminBackoffice: React.FC<AdminBackofficeProps> = ({ isVisible, onC
     });
   };
 
+  // Set admin access when backoffice is accessed
+  useEffect(() => {
+    if (isVisible) {
+      localStorage.setItem('admin-access', 'true');
+    }
+  }, [isVisible]);
+
   if (!isVisible) return null;
 
   return (
