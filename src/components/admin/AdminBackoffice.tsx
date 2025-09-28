@@ -37,9 +37,12 @@ export const AdminBackoffice: React.FC<AdminBackofficeProps> = ({ isVisible, onC
       try {
         const referralData = JSON.parse(globalReferrals);
         totalGlobalReferrals = referralData.total || 0;
+        console.log('Loading global referrals:', totalGlobalReferrals);
       } catch (error) {
         console.error('Failed to load global referrals:', error);
       }
+    } else {
+      console.log('No global referrals found in localStorage');
     }
     
     if (savedGame) {
@@ -240,8 +243,24 @@ export const AdminBackoffice: React.FC<AdminBackofficeProps> = ({ isVisible, onC
                     title: "Storage Cleared",
                     description: "All localStorage data cleared",
                   });
+                  loadGameStats();
                 }}>
                   Clear All Storage
+                </Button>
+                <Button variant="outline" onClick={() => {
+                  // Add test referrals for debugging
+                  const testReferrals = {
+                    total: Math.floor(Math.random() * 10) + 1,
+                    history: []
+                  };
+                  localStorage.setItem('global-referrals', JSON.stringify(testReferrals));
+                  loadGameStats();
+                  toast({
+                    title: "Test Referrals Added",
+                    description: `Added ${testReferrals.total} test referrals`,
+                  });
+                }}>
+                  Add Test Referrals
                 </Button>
               </div>
             </CardContent>

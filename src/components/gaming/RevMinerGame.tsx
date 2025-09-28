@@ -265,6 +265,7 @@ const RevMinerGame = () => {
       ].slice(-100); // Keep last 100 referrals
       
       localStorage.setItem('global-referrals', JSON.stringify(referralData));
+      console.log('Global referrals updated:', referralData.total);
     } else {
       setActivityFeed(prev => [
         `💸 Paid Advertisers → No referral this time`,
