@@ -295,7 +295,9 @@ const RevMinerGame = () => {
 
               {gameState.referrals.length > 0 && (
                 <div className="space-y-2">
-                  <h4 className="font-semibold text-empire-primary">Referrals</h4>
+                  <h4 className="font-semibold text-empire-primary">
+                    Referrals ({gameState.referrals.length})
+                  </h4>
                   <ScrollArea className="h-20">
                     {gameState.referrals.map((referral, index) => (
                       <div key={referral.id} className="text-sm flex justify-between">
